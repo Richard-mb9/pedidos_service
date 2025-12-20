@@ -1,14 +1,23 @@
-from typing import List, Any
+from typing import List, Any, Dict
 from datetime import datetime, timezone
 from decimal import Decimal
 from uuid import uuid4, UUID
 
 from domain.enums.order_status import OrderStatus
+from domain.exceptions import OrderAlreadyCancelledError, InvalidStatusTransitionError
 
 from .order_item import OrderItem
 
 
 class Order:
+    _valid_transitions: Dict[OrderStatus, List[OrderStatus]] = {
+        OrderStatus.CREATED: [OrderStatus.PROCESSING, OrderStatus.CANCELLED],
+        OrderStatus.PROCESSING: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
+        OrderStatus.SHIPPED: [OrderStatus.DELIVERED],
+        OrderStatus.DELIVERED: [],
+        OrderStatus.CANCELLED: [],
+    }
+
     def __init__(
         self,
         customer_id: UUID,
@@ -32,6 +41,17 @@ class Order:
         for item in self.items:
             total += item.subtotal
         return total
+
+    def validate_transition_to(self, new_status: OrderStatus):
+        if new_status not in self._valid_transitions.get(self.status, []):
+            raise InvalidStatusTransitionError(
+                order_id=self.id,
+                current_status=self.status,
+                attempted_status=new_status,
+            )
+
+        if self.status == OrderStatus.CANCELLED:
+            raise OrderAlreadyCancelledError(order_id=self.id)
 
     def to_dict(self) -> dict[str, Any]:
         return {

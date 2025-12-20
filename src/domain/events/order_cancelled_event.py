@@ -13,8 +13,8 @@ class OrderCancelledEvent(DomainEvent):
         self,
         order_id: UUID,
         customer_id: UUID,
-        cancellation_reason: str,
         refund_amount: Optional[Decimal] = Decimal("0"),
+        cancellation_reason: Optional[str] = None,
     ):
         super().__init__()
         self.order_id = order_id

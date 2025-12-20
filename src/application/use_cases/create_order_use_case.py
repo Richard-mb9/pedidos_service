@@ -1,6 +1,6 @@
 from application.repositories import OrderRepositoryInterface
 from application.dtos import CreateOrderDTO
-from application.events import OrderEventManagerInterface
+from application.events import OrderEventManager
 
 from domain.entities import Order, OrderItem
 
@@ -9,7 +9,7 @@ class CreateOrderUseCase:
     def __init__(
         self,
         repository: OrderRepositoryInterface,
-        order_event_manager: OrderEventManagerInterface,
+        order_event_manager: OrderEventManager,
     ):
         self.repository = repository
         self.order_event_manager = order_event_manager
