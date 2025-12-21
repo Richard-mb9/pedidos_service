@@ -20,6 +20,6 @@ class OrderItem:
             "productId": str(self.product_id),
             "productName": self.product_name,
             "quantity": self.quantity,
-            "unitPrice": self.unit_price,
-            "subtotal": self.subtotal,
+            "unitPrice": float(self.unit_price),
+            "subtotal": float(self.subtotal),
         }

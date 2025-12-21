@@ -1,4 +1,4 @@
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Optional
 from datetime import datetime, timezone
 from decimal import Decimal
 from uuid import uuid4, UUID
@@ -23,18 +23,22 @@ class Order:
         customer_id: UUID,
         shipping_address: str,
         items: List[OrderItem],
-        id: UUID = uuid4(),
-        status: OrderStatus = OrderStatus.CREATED,
-        created_at: datetime = datetime.now(timezone.utc),
-        updated_at: datetime = datetime.now(timezone.utc),
+        id: Optional[UUID] = None,
+        status: Optional[OrderStatus] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
     ):
-        self.id = id
+        self.id = id if id is not None else uuid4()
         self.customer_id = customer_id
         self.shipping_address = shipping_address
         self.items = items
-        self.status = status
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.status = status if status is not None else OrderStatus.CREATED
+        self.created_at = (
+            created_at if created_at is not None else datetime.now(timezone.utc)
+        )
+        self.updated_at = (
+            updated_at if updated_at is not None else datetime.now(timezone.utc)
+        )
 
     @property
     def total_amount(self) -> Decimal:
@@ -60,7 +64,7 @@ class Order:
             "customerId": str(self.customer_id),
             "shippingAddress": self.shipping_address,
             "status": self.status.value,
-            "createdAt": self.created_at,
-            "updatedAt": self.updated_at,
+            "createdAt": self.created_at.isoformat(),
+            "updatedAt": self.updated_at.isoformat(),
             "items": [item.to_dict() for item in self.items],
         }

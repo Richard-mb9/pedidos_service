@@ -28,7 +28,7 @@ class CreateOrderUseCase:
                 for item in data.items
             ],
         )
-
+        self.repository.save(order)
         self.order_event_manager.order_created_event(order=order).publish_events()
 
         return order
