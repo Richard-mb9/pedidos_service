@@ -27,9 +27,7 @@ from api.schemas import (
 class OrdersController:
     def __init__(self) -> None:
         self.order_reposieoty = OrdersRepository(adapter=NoSqlAdapter())
-        self.order_event_manager = OrderEventManager(
-            PublisherAdapter(topic_name="orders")
-        )
+        self.order_event_manager = OrderEventManager(PublisherAdapter())
 
     def create(self, data: CreateOrderRequest) -> CreateOrderResponse:
         use_case = CreateOrderUseCase(
