@@ -1,6 +1,5 @@
 from uuid import UUID
 from typing import Optional
-from datetime import datetime
 from abc import ABC, abstractmethod
 from domain.entities import Order
 from domain.enums import OrderStatus
@@ -17,7 +16,5 @@ class OrderRepositoryInterface(ABC):
         raise NotImplementedError("Should implement method: save")
 
     @abstractmethod
-    def update_status(
-        self, order_id: UUID, new_status: OrderStatus, updated_at: datetime
-    ) -> bool:
+    def update_status(self, order_id: UUID, new_status: OrderStatus) -> bool:
         raise NotImplementedError("Should implement method: update_status")

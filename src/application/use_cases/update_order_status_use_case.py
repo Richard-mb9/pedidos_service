@@ -1,12 +1,11 @@
 from uuid import UUID
-from datetime import datetime, timezone
 from application.repositories import OrderRepositoryInterface
 from application.events import OrderEventManager
 from domain.enums import OrderStatus
 from .find_order_by_id_use_case import FindOrderByIdUseCase
 
 
-class ChangeStatusUseCase:
+class UpdateOrderStatusUseCase:
     def __init__(
         self,
         repository: OrderRepositoryInterface,
@@ -23,7 +22,6 @@ class ChangeStatusUseCase:
             self.repository.update_status(
                 order_id=order_id,
                 new_status=new_status,
-                updated_at=datetime.now(timezone.utc),
             )
 
             self.order_event_manager.order_status_changed_event(

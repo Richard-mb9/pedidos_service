@@ -25,15 +25,16 @@ class Order:
         items: List[OrderItem],
         id: UUID = uuid4(),
         status: OrderStatus = OrderStatus.CREATED,
+        created_at: datetime = datetime.now(timezone.utc),
+        updated_at: datetime = datetime.now(timezone.utc),
     ):
         self.id = id
         self.customer_id = customer_id
         self.shipping_address = shipping_address
         self.items = items
         self.status = status
-        self.created_at = datetime.now(timezone.utc)
-        self.updated_at = datetime.now(timezone.utc)
-        self._pending_events = []
+        self.created_at = created_at
+        self.updated_at = updated_at
 
     @property
     def total_amount(self) -> Decimal:
