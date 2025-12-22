@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class OrderStatus(str, Enum):
-    CREATED = "created"
-    PROCESSING = "processing"
-    SHIPPED = "shipped"
-    DELIVERED = "delivered"
-    CANCELLED = "cancelled"
+    CREATED = "CREATED"
+    PROCESSING = "PROCESSING"
+    SHIPPED = "SHIPPED"
+    DELIVERED = "DELIVERED"
+    CANCELLED = "CANCELLED"

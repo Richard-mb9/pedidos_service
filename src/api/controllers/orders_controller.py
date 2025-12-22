@@ -10,7 +10,6 @@ from application.use_cases import (
 )
 
 from application.dtos import CreateOrderDTO, OrderItemDTO
-from application.events import OrderEventManager
 
 from infra.repositories import OrdersRepository
 from infra.adapters import NoSqlAdapter, PublisherAdapter
@@ -27,12 +26,11 @@ from api.schemas import (
 class OrdersController:
     def __init__(self) -> None:
         self.order_reposieoty = OrdersRepository(adapter=NoSqlAdapter())
-        self.order_event_manager = OrderEventManager(PublisherAdapter())
 
     def create(self, data: CreateOrderRequest) -> CreateOrderResponse:
         use_case = CreateOrderUseCase(
             repository=self.order_reposieoty,
-            order_event_manager=self.order_event_manager,
+            publisher=PublisherAdapter(),
         )
 
         dto = CreateOrderDTO(
@@ -80,7 +78,7 @@ class OrdersController:
     ) -> None:
         use_case = UpdateOrderStatusUseCase(
             repository=self.order_reposieoty,
-            order_event_manager=self.order_event_manager,
+            publisher=PublisherAdapter(),
         )
 
         use_case.execute(order_id=order_id, new_status=data.newStatus)

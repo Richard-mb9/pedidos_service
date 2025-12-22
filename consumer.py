@@ -11,7 +11,7 @@ def start_consumer():
     # 1. Configurações de Conexão
     credentials = pika.PlainCredentials("guest", "guest")
     parameters = pika.ConnectionParameters(
-        host="localhost", port=5673, credentials=credentials
+        host="localhost", port=5672, credentials=credentials
     )
 
     connection = pika.BlockingConnection(parameters)

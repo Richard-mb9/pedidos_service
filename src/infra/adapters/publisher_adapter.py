@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 from json import dumps
 from pika import (
     ConnectionParameters,
@@ -9,6 +9,7 @@ from pika import (
 
 from config import MQ_HOST, MQ_PASSWORD, MQ_USER, MQ_PORT
 from application.adapters import PublisherAdapterInterface
+from domain.events import DomainEvent
 
 
 class PublisherAdapter(PublisherAdapterInterface):
@@ -36,4 +37,9 @@ class PublisherAdapter(PublisherAdapterInterface):
             ),
         )
 
-        self.connection.close()
+    def publish_event(self, event: DomainEvent):
+        self.publish(event_name=event.event_name, payload=event.to_dict())
+
+    def publish_events(self, events: List[DomainEvent]) -> None:
+        for event in events:
+            self.publish_event(event)

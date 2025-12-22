@@ -1,6 +1,6 @@
 from application.repositories import OrderRepositoryInterface
 from application.dtos import CreateOrderDTO
-from application.events import OrderEventManager
+from application.adapters import PublisherAdapterInterface
 
 from domain.entities import Order, OrderItem
 
@@ -9,13 +9,13 @@ class CreateOrderUseCase:
     def __init__(
         self,
         repository: OrderRepositoryInterface,
-        order_event_manager: OrderEventManager,
+        publisher: PublisherAdapterInterface,
     ):
         self.repository = repository
-        self.order_event_manager = order_event_manager
+        self.publisher = publisher
 
     def execute(self, data: CreateOrderDTO) -> Order:
-        order = Order(
+        order = Order.create(
             customer_id=data.customer_id,
             shipping_address=data.shipping_address,
             items=[
@@ -29,6 +29,6 @@ class CreateOrderUseCase:
             ],
         )
         self.repository.save(order)
-        self.order_event_manager.order_created_event(order=order).publish_events()
+        self.publisher.publish_events(order.pending_events)
 
         return order

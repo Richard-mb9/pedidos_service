@@ -3,3 +3,4 @@ from .domain_exception import DomainException
 from .invalid_status_transation_error import InvalidStatusTransitionError
 from .order_already_cancelled_error import OrderAlreadyCancelledError
 from .order_not_found_error import OrderNotFoundError
+from .order_already_delivered_error import OrderAlreadyDeliveredError

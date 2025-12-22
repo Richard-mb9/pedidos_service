@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo:latest
-    container_name: meu_mongo
+    container_name: mongo
     ports:
       - "27017:27017"
     environment:
@@ -9,9 +9,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=mongo
     volumes:
-      # Aqui está o segredo:
       - ./docker/initDb.js:/docker-entrypoint-initdb.d/init-db.js:ro
-      # Volume para persistir os dados
       - mongo_data:/data/db
 
 volumes:

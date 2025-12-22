@@ -18,7 +18,7 @@ class OrdersRepository(OrderRepositoryInterface):
             id=UUID(document.get("id")),
             customer_id=UUID(document.get("customerId")),
             shipping_address=document.get("shippingAddress", ""),
-            status=document.get("status", ""),
+            status=OrderStatus[document.get("status", "")],
             created_at=datetime.fromisoformat(document.get("createdAt", "")),
             updated_at=datetime.fromisoformat(document.get("createdAt", "")),
             items=[
