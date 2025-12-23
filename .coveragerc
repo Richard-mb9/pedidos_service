@@ -1,0 +1,8 @@
+[run]
+omit = 
+    src/config.py
+    src/main.py
+    src/infra/repositories/*
+    src/application/adapters/*
+    src/application/repositories/* 
+    tests/*

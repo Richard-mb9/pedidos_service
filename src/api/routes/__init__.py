@@ -9,7 +9,7 @@ health_router = APIRouter()
 
 @health_router.get("/health")
 def ping():
-    return "ok"
+    return "ok"  # pragma: no cover
 
 
 def create_routes(app: FastAPI, url_prefix: str):
