@@ -3,6 +3,7 @@ omit =
     src/config.py
     src/main.py
     src/infra/repositories/*
+    src/infra/adapters/*
     src/application/adapters/*
     src/application/repositories/* 
     tests/*

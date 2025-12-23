@@ -22,9 +22,11 @@ class DomainEvent(ABC):
 
     @abstractmethod
     def _payload(self) -> dict[str, Any]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def __init_subclass__(cls, **kwargs: Any):
         super().__init_subclass__(**kwargs)
         if not hasattr(cls, "event_name"):
-            raise TypeError(f"{cls.__name__} should define the attribte 'event_name'")
+            raise TypeError(
+                f"{cls.__name__} should define the attribte 'event_name'"
+            )  # pragma: no cover
