@@ -17,6 +17,14 @@ API_DOC_REDOC = f"{URL_PREFIX}/doc/redoc"
 API_DOC_JSON = f"{URL_PREFIX}/doc/api.json"
 API_VERSION = "V1.0.0"
 
+STATUS_CODE_MAP: Dict[ErrorCategory, int] = {
+    ErrorCategory.NOT_FOUND: 404,
+    ErrorCategory.CONFLICT: 409,
+    ErrorCategory.VALIDATION: 422,
+    ErrorCategory.FORBIDDEN: 403,
+    ErrorCategory.INTERNAL: 500,
+}
+
 
 def create_app():
     api = FastAPI(
@@ -28,45 +36,36 @@ def create_app():
         version=API_VERSION,
     )
 
+    api.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    @api.exception_handler(DomainException)
+    def http_exception_handler(request: Request, error: DomainException):  # type: ignore
+        return JSONResponse(
+            content={"detail": error.message},
+            status_code=STATUS_CODE_MAP[error.category],
+        )
+
+    @api.exception_handler(RequestValidationError)
+    async def validation_exception_handler(  # type: ignore
+        request: Request, exc: RequestValidationError
+    ):
+        errors = exc.errors()
+        response = {}
+        for error in errors:
+            key = error["loc"][1]
+            response[key] = error["msg"]
+        return JSONResponse(
+            status_code=HTTPStatus.BAD_REQUEST,
+            content={"detail": response},
+        )
+
     return create_routes(api, URL_PREFIX)
 
 
 app = create_app()
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-STATUS_CODE_MAP: Dict[ErrorCategory, int] = {
-    ErrorCategory.NOT_FOUND: 404,
-    ErrorCategory.CONFLICT: 409,
-    ErrorCategory.VALIDATION: 422,
-    ErrorCategory.FORBIDDEN: 403,
-    ErrorCategory.INTERNAL: 500,
-}
-
-
-@app.exception_handler(DomainException)
-def http_exception_handler(request: Request, error: DomainException):
-    return JSONResponse(
-        content={"detail": error.message}, status_code=STATUS_CODE_MAP[error.category]
-    )
-
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    errors = exc.errors()
-    response = {}
-    for error in errors:
-        key = error["loc"][1]
-        response[key] = error["msg"]
-    return JSONResponse(
-        status_code=HTTPStatus.BAD_REQUEST,
-        content={"detail": response},
-    )

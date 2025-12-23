@@ -12,6 +12,15 @@
       "args": ["main:app", "--port", "8081", "--reload", "--app-dir", "src"],
       "jinja": true,
       "justMyCode": true
+    },
+    {
+      "name": "Debug pytest (full)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "justMyCode": false,
+      "args": ["tests"],
+      "console": "integratedTerminal"
     }
   ]
 }
