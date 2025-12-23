@@ -27,5 +27,8 @@ class FakeOrderRepository(OrderRepositoryInterface):
 
         return False
 
+    def clear_data(self):
+        self.data = []
+
 
 fake_order_repository = FakeOrderRepository()

@@ -1,3 +1,6 @@
 /venv
 **/__pycache__
 /typings
+.pytest_cache
+.coverage
+/htmlcov

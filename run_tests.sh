@@ -2,12 +2,12 @@
 
 cleanup() {
   echo "Encerrando containers..."
-  sudo docker-compose down
+  sudo docker-compose -f docker-compose-test.yml down
 }
 trap cleanup EXIT
 
 echo "Iniciando containers..."
-if ! sudo docker-compose up -d; then
+if ! sudo docker-compose -f docker-compose-test.yml up -d; then
   echo "Falha ao iniciar docker-compose. Verificando logs..."
   sudo docker-compose logs
   exit 1
@@ -16,10 +16,9 @@ fi
 echo "Aguardando serviços..."
 sleep 5
 
-# Verifica se os containers estão de pé
-if ! sudo docker-compose ps | grep -q "Up"; then
+if ! sudo docker-compose -f docker-compose-test.yml ps | grep -q "Up"; then
   echo "Containers não estão rodando corretamente"
-  sudo docker-compose logs
+  sudo docker-compose -f docker-compose-test.yml logs
   exit 1
 fi
 
@@ -27,7 +26,7 @@ echo "Executando testes..."
 pytest --cov=./src --cov-report=html -W ignore::DeprecationWarning
 
 TEST_EXIT_CODE=$?
-sudo docker-compose down
+sudo docker-compose -f docker-compose-test.yml down
 
 echo ""
 echo "=========================================="

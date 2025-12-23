@@ -14,4 +14,5 @@ def mock_fake_order_repository():
     )
 
     yield
+    fake_order_repository.clear_data()
     unstub()
