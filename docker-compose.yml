@@ -12,5 +12,23 @@ services:
       - ./docker/initDb.js:/docker-entrypoint-initdb.d/init-db.js:ro
       - mongo_data:/data/db
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 volumes:
   mongo_data:
+  rabbitmq_data:
