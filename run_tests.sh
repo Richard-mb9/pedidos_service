@@ -1,1 +1,1 @@
-pytest --cov=./src --cov-report=html
+pytest --cov=./src --cov-report=html -W ignore::DeprecationWarning
